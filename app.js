@@ -1,59 +1,61 @@
 const express   = require('express');
+const morgan    = require('morgan');
 const app       = express();
 require('dotenv').config();
 const port      = process.env.PORT;
 
-//? Para que express entienda que los datos 
-//? que recibe son JSON, lo tenemos que indicar
-//? de la siguiente forma
+
 app.use(express.json());
+app.use(morgan('dev'));
 
-//? Pasa por antes que todas las rutas gracias al next()
-app.all('/user', (req, res, next) => {
-    console.log('Por aqui paso')
-    next();
-});
-
-app.get('/user', (req,res) => {
-    const { ...data } = req.body;
-
-    res.json({
-        msg: `GET - usuarios`,
-        data
-    });
-});
-
-app.post('/user', (req,res) => {
-    const { ...data } = req.body;
+// app.all('/user', (req, res, next) => {
+    //     console.log('Por aqui paso')
+    //     next();
+    // });
     
-    res.json({
-        msg: `POST - usuario creado`,
-        data
+    app.get('/user', (req,res) => {
+        res.json({
+            msg: `GET - usuarios`,
+        });
     });
-});
-
-
-//? Rutas dinamicas
-app.put('/user/:id', (req,res) => {
-    const id = req.params.id;
     
-    res.json({
-        msg: `PUT - usuario ${id} actualizado`,
-        id
+    app.post('/user', (req,res) => {
+        const { ...data } = req.body;
+        res.json({
+            msg: `POST - usuario creado`,
+            data
+        });
     });
-});
-
-app.delete('/user/:id', (req,res) => {
-    const id = req.params.id;
-
-    res.json({
-        msg: `DELETE - Usuario ${parametros} eliminado`,
-        id
+    
+    app.put('/user/:id', (req,res) => {
+        const id = req.params.id;
+        res.json({
+            msg: `PUT - usuario ${id} actualizado`,
+            id
+        });
     });
-});
+    
+    app.delete('/user/:id', (req,res) => {
+        const id = req.params.id;
+        res.json({
+            msg: `DELETE - Usuario ${parametros} eliminado`,
+            id
+        });
+    });
+    
+    
+    
+    app.listen( port, (req,res) => {
+        console.log(`Servidor corriendo en puerto ${port}`)
+    });
+    
+    
+//? Por esto ejecutamos los middlewares 
+//? antes de las rutas
+    
+// function logger(req, res, next){
+//     console.log(`Route received: ${req.protocol}://${req.get('host')}${req.originalUrl}`);
+//     next();
+// }
 
-
-
-app.listen( port, (req,res) => {
-    console.log(`Servidor corriendo en puerto ${port}`)
-});
+// app.use(logger);
