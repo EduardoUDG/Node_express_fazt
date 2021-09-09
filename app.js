@@ -4,16 +4,29 @@ const app       = express();
 require('dotenv').config();
 const port      = process.env.PORT;
 
+//? Configuraciones de express
+//? Puerto | Motor de plantillas | Nombre de aplicacion
+//? Necesitaremos el método set()
+//TODO set( NombreDeVariable, valorDeVariable );
+//TODO miramos la escucha del puerto console.log
+app.set('appName', 'Eduardo Express Tutorial');
+app.set('view engine', 'ejs');
+
+
+
+//* Middewares
 app.use(express.json());
 // app.use(morgan('dev'));
 
-//? Otro middleware
-//? Se encarga de mandar archivos al Frontend
-//? tales como HTML, CSS y JS
-//? son archivos estaticos 
-//? La carpeta PUBLIC siempre buscara archivos index
-app.use(express.static('public'));
 
+
+//* Routes
+//TODO render() busca dentro del directorio views 
+//TODO el primer index que encuentre
+app.get('/', (req,res) => {
+    const data = [{name:'Juan'}, {name:'Hector'}, {name:'Casco'}];
+    res.render('index.ejs', { people: data});
+});
 
 
 app.get('/user', (req,res) => {
@@ -46,11 +59,12 @@ app.delete('/user/:id', (req,res) => {
     });
 });
 
-//? Este middleware tiene que pasar por todas las ritas    
-//? Colocamos el nombre de la carpeta
+//* Public
+app.use(express.static('public'));
 
 
 app.listen( port, (req,res) => {
+    console.log( app.get('appName') );
     console.log(`Servidor corriendo en puerto ${port}`)
 });
     
