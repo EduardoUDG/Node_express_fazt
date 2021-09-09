@@ -4,15 +4,18 @@ const app       = express();
 require('dotenv').config();
 const port      = process.env.PORT;
 
-
 app.use(express.json());
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 
-// app.all('/user', (req, res, next) => {
-//     console.log('Por aqui paso')
-//     next();
-// });
-    
+//? Otro middleware
+//? Se encarga de mandar archivos al Frontend
+//? tales como HTML, CSS y JS
+//? son archivos estaticos 
+//? La carpeta PUBLIC siempre buscara archivos index
+app.use(express.static('public'));
+
+
+
 app.get('/user', (req,res) => {
     res.json({
         msg: `GET - usuarios`,
@@ -43,19 +46,11 @@ app.delete('/user/:id', (req,res) => {
     });
 });
 
+//? Este middleware tiene que pasar por todas las ritas    
+//? Colocamos el nombre de la carpeta
 
 
 app.listen( port, (req,res) => {
     console.log(`Servidor corriendo en puerto ${port}`)
 });
     
-    
-//? Por esto ejecutamos los middlewares 
-//? antes de las rutas
-    
-// function logger(req, res, next){
-//     console.log(`Route received: ${req.protocol}://${req.get('host')}${req.originalUrl}`);
-//     next();
-// }
-
-// app.use(logger);
